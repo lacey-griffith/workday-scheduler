@@ -77,8 +77,8 @@ function plannerLayout() {
         timeBlockContainer.appendChild(taskElDisplay);
 
         calendarContainer.appendChild(timeBlockContainer);
-        checkStatus();
     }
+    checkStatus();
 };
 
 function checkStatus() {
@@ -98,7 +98,8 @@ function checkStatus() {
             .addClass("past");
 
             //console.log(timeElDisplay)
-            console.log("working-past", hoursOfDay[i].military)
+            console.log("working-past", hoursOfDay[i].time)
+            console.log(currentTime, hoursOfDay[i].military)
         }
         
         else if (currentTime === hoursOfDay[i].military) {
@@ -114,11 +115,12 @@ function checkStatus() {
             .addClass("present");
 
             //console.log(timeElDisplay)
-            console.log("working-present", hoursOfDay[i].military);
+            console.log("working-present", hoursOfDay[i].time);
+            console.log(currentTime, hoursOfDay[i].military)
         }
         
         else if (currentTime < hoursOfDay[i].military) {
-
+            
             $(timeElDisplay)
             .removeClass("present")
             .removeClass("past")
@@ -131,6 +133,7 @@ function checkStatus() {
 
             //console.log(timeElDisplay)
             console.log("working-future", hoursOfDay[i].time);
+            console.log(currentTime, hoursOfDay[i].military)
         }
     }
 
