@@ -86,44 +86,51 @@ function checkStatus() {
 
     for (var i = 0; i < hoursOfDay.length; i++) {
         if (currentTime > hoursOfDay[i].military) {
-            //console.log("working-past", hoursOfDay[i].military)
 
             $(timeElDisplay)
-            .removeClass("present").removeClass("future")
+            .removeClass("present")
+            .removeClass("future")
             .addClass("past");
 
             $(taskElDisplay)
-            .removeClass("present").removeClass("future")
+            .removeClass("present")
+            .removeClass("future")
             .addClass("past");
+
             //console.log(timeElDisplay)
-        } 
+            console.log("working-past", hoursOfDay[i].military)
+        }
         
-        if (currentTime === hoursOfDay[i].military) {
-            //console.log("working-present", hoursOfDay[i].military);
+        else if (currentTime === hoursOfDay[i].military) {
 
             $(timeElDisplay)
-            .removeClass("past").removeClass("future")
+            .removeClass("past")
+            .removeClass("future")
             .addClass("present");
 
             $(taskElDisplay)
-            .removeClass("past").removeClass("future")
+            .removeClass("past")
+            .removeClass("future")
             .addClass("present");
 
-            // console.log(timeElDisplay)
-        } 
+            //console.log(timeElDisplay)
+            console.log("working-present", hoursOfDay[i].military);
+        }
         
-        if (currentTime < hoursOfDay[i].military) {
-            //console.log("working-future", hoursOfDay[i].time);
+        else if (currentTime < hoursOfDay[i].military) {
 
             $(timeElDisplay)
-            .removeClass("present").removeClass("past")
+            .removeClass("present")
+            .removeClass("past")
             .addClass("future");
 
             $(taskElDisplay)
-            .removeClass("present").removeClass("past")
+            .removeClass("present")
+            .removeClass("past")
             .addClass("future");
 
             //console.log(timeElDisplay)
+            console.log("working-future", hoursOfDay[i].time);
         }
     }
 
