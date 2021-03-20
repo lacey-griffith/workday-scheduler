@@ -4,7 +4,7 @@ body {
   line-height: 1;
 }
 
-textarea{
+.text-area {
   background: transparent;
   border: none;
   resize: none;
@@ -37,7 +37,7 @@ textarea{
 }
 
 .hour {
-  background-color: #ffffff;
+  background-color: #e7e3e3;
   color: #000000;
   border-top: 1px dashed #000000;
 }
