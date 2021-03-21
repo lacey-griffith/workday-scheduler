@@ -1,23 +1,18 @@
-// GIVEN I am using a daily planner to create a schedule
-// WHEN I open the planner
-// THEN the current day is displayed at the top of the calendar
-var displayDayEl = document.querySelector("#currentDay");
-var calendarContainer = document.querySelector("#container");
-var taskEl = document.getElementById("#task-item");
-var timeEl = document.getElementById("#time-hour");
 
-var timeBlockContainer = document.createElement("div");
-var taskElDisplay = document.createElement("div");
-var timeElDisplay = document.createElement("div");
+var taskId = "";
+var tasks = [];
+var timeBlockContainer = document.createElement("div")
+var taskElDisplay = document.createElement("div")
 
 function displayDate() {
+    var displayDayEl = document.querySelector("#currentDay");
+
     var currentDay = moment().format("dddd[,] MMMM Do[,] YYYY");
     displayDayEl.textContent = currentDay;
     console.log(currentDay);
     plannerLayout();
 }
-// WHEN I scroll down
-// THEN I am presented with time blocks for standard business hours
+
 var hoursOfDay = [{
     time: 8,
     meridiem: "AM",
@@ -58,25 +53,66 @@ var hoursOfDay = [{
     time: 5,
     meridiem: "PM",
     military: 17
+},  {
+    time: 6,
+    meridiem: "PM",
+    military: 18
+},{
+    time: 7,
+    meridiem: "PM",
+    military: 19
 }];
+
 
 function plannerLayout() {
     for (var i = 0; i < hoursOfDay.length; i++) {
-        timeBlockContainer = document.createElement("div")
+        var calendarContainer = document.querySelector("#container");
+        //create div to hold HOUR and TASK
+       var timeBlockContainer = document.createElement("div")
         timeBlockContainer.className = "row time-block";
 
-        timeElDisplay = document.createElement("div")
+        //create div to display HOUR
+        var timeElDisplay = document.createElement("div")
         timeElDisplay.className = "col-2 time-block hour";
         timeElDisplay.id = "time-hour-" + hoursOfDay[i].time;
         timeElDisplay.textContent = hoursOfDay[i].time + hoursOfDay[i].meridiem;
         timeBlockContainer.appendChild(timeElDisplay);
 
-        taskElDisplay = document.createElement("div")
-        taskElDisplay.className = "col-10 time-block text-area";
-        taskElDisplay.id = "task-item-" + hoursOfDay[i].time;
-        timeBlockContainer.appendChild(taskElDisplay);
+        //create div to display TASK container
+        var taskElDisplay = document.createElement("div")
+        taskElDisplay.className = "col-9 time-block";
+        taskElDisplay.id = "task-container-" + hoursOfDay[i].time;
+        taskElDisplay.addEventListener("click", createNewTask)
 
+
+        // //create text area for TASK events
+        // var taskEl = document.createElement("textarea")
+        // taskEl.setAttribute("type", "text")
+        // taskEl.className = "description"
+        // taskEl.id = "task-item-" + hoursOfDay[i].time
+        // taskEl.textContent = ""
+        // taskElDisplay.appendChild(taskEl);
+
+        //create div to hold SAVE button
+        var saveContainer = document.createElement("div")
+        saveContainer.className = "col-1 time-block saveBtn-container"
+        
+        //create SAVE button for tasks
+        var saveBtn = document.createElement("button")
+        saveBtn.className = "saveBtn"
+        saveBtn.textContent = "Save"
+        saveBtn.addEventListener("click", saveTask);
+        saveContainer.appendChild(saveBtn)
+        
+        timeBlockContainer.appendChild(taskElDisplay);
+        timeBlockContainer.appendChild(saveContainer);
         calendarContainer.appendChild(timeBlockContainer);
+
+        //put info as object
+        var taskDataObj = {
+            taskTime: hoursOfDay[i].time,
+        }
+        tasks.push(taskDataObj)
     }
     checkStatus();
 };
@@ -85,62 +121,79 @@ function checkStatus() {
     var currentTime = moment().hour();
 
     for (var i = 0; i < hoursOfDay.length; i++) {
+
         if (currentTime > hoursOfDay[i].military) {
 
-            $(timeElDisplay)
+            $("#time-hour-" + hoursOfDay[i].time)
             .removeClass("present")
             .removeClass("future")
             .addClass("past");
 
-            $(taskElDisplay)
+            $("#task-container-" + hoursOfDay[i].time)
             .removeClass("present")
             .removeClass("future")
             .addClass("past");
-
-            //console.log(timeElDisplay)
-            console.log("working-past", hoursOfDay[i].time)
-            console.log(currentTime, hoursOfDay[i].military)
         }
         
         else if (currentTime === hoursOfDay[i].military) {
 
-            $(timeElDisplay)
+            $("#time-hour-" + hoursOfDay[i].time)
             .removeClass("past")
             .removeClass("future")
             .addClass("present");
 
-            $(taskElDisplay)
+            $("#task-container-" + hoursOfDay[i].time)
             .removeClass("past")
             .removeClass("future")
             .addClass("present");
-
-            //console.log(timeElDisplay)
-            console.log("working-present", hoursOfDay[i].time);
-            console.log(currentTime, hoursOfDay[i].military)
         }
         
         else if (currentTime < hoursOfDay[i].military) {
             
-            $(timeElDisplay)
+            $("#time-hour-" + hoursOfDay[i].time)
             .removeClass("present")
             .removeClass("past")
             .addClass("future");
 
-            $(taskElDisplay)
+            $("#task-container-" + hoursOfDay[i].time)
             .removeClass("present")
             .removeClass("past")
             .addClass("future");
-
-            //console.log(timeElDisplay)
-            console.log("working-future", hoursOfDay[i].time);
-            console.log(currentTime, hoursOfDay[i].military)
         }
     }
-
 };
-// WHEN I view the time blocks for that day
-// THEN each time block is color-coded to indicate whether it is in the past, present, or future
 
+function createNewTask(event) {
+
+    //create text area for TASK events
+    var taskEl = document.createElement("form")
+    taskEl.setAttribute("type", "text")
+    taskEl.className = "description"
+    taskEl.id = newTaskId
+    taskEl.textContent = ""
+    taskElDisplay.appendChild(taskEl);
+    var newTaskId = event.target.getAttribute("id");
+
+    var newTask = document.querySelector("#"+ newTaskId)
+    var taskInput = $(this).val(newTask);
+    newTask.textContent = taskInput
+    taskElDisplay.appendChild(newTask);
+
+    console.log(newTaskId);
+    console.log(newTask);
+    console.log(taskInput)
+
+}
+function editTask(event) {
+}
+
+function saveTask (event) {
+    
+}
+
+function loadTasks () {
+
+}
 // WHEN I click into a time block
 // THEN I can enter an event
 // WHEN I click the save button for that time block
@@ -152,6 +205,6 @@ function checkStatus() {
 
 
 
-
-
 displayDate();
+
+setInterval(checkStatus(), (1000 * 60) * 1);
