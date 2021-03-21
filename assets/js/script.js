@@ -1,8 +1,6 @@
 
-var taskId = "";
+var taskDataObj = [];
 var tasks = [];
-var timeBlockContainer = document.createElement("div")
-var taskElDisplay = document.createElement("div")
 
 function displayDate() {
     var displayDayEl = document.querySelector("#currentDay");
@@ -11,6 +9,8 @@ function displayDate() {
     displayDayEl.textContent = currentDay;
     console.log(currentDay);
     plannerLayout();
+    checkStatus();
+    loadTasks();
 }
 
 var hoursOfDay = [{
@@ -63,10 +63,10 @@ var hoursOfDay = [{
     military: 19
 }];
 
-
 function plannerLayout() {
     for (var i = 0; i < hoursOfDay.length; i++) {
         var calendarContainer = document.querySelector("#container");
+
         //create div to hold HOUR and TASK
        var timeBlockContainer = document.createElement("div")
         timeBlockContainer.className = "row time-block";
@@ -80,27 +80,28 @@ function plannerLayout() {
 
         //create div to display TASK container
         var taskElDisplay = document.createElement("div")
-        taskElDisplay.className = "col-9 time-block";
+        taskElDisplay.className = "col-9 time-block task-container";
         taskElDisplay.id = "task-container-" + hoursOfDay[i].time;
-        taskElDisplay.addEventListener("click", createNewTask)
 
 
-        // //create text area for TASK events
-        // var taskEl = document.createElement("textarea")
-        // taskEl.setAttribute("type", "text")
-        // taskEl.className = "description"
-        // taskEl.id = "task-item-" + hoursOfDay[i].time
-        // taskEl.textContent = ""
-        // taskElDisplay.appendChild(taskEl);
+        //create text area for TASK events
+        var taskEl = document.createElement("textarea")
+        taskEl.setAttribute("type", "text")
+        taskEl.setAttribute("name", "task")
+        taskEl.className = "text-area"
+        taskEl.id = "task-item-" + hoursOfDay[i].time
+        taskEl.textContent = "test";
+        taskElDisplay.appendChild(taskEl);
 
         //create div to hold SAVE button
         var saveContainer = document.createElement("div")
-        saveContainer.className = "col-1 time-block saveBtn-container"
+        saveContainer.className = "col-1 btn-container row"
         
         //create SAVE button for tasks
         var saveBtn = document.createElement("button")
         saveBtn.className = "saveBtn"
         saveBtn.textContent = "Save"
+        saveBtn.id = "save"+ hoursOfDay[i].time
         saveBtn.addEventListener("click", saveTask);
         saveContainer.appendChild(saveBtn)
         
@@ -110,7 +111,10 @@ function plannerLayout() {
 
         //put info as object
         var taskDataObj = {
+            taskId: taskEl.id,
+            saveBtnId: saveBtn.id,
             taskTime: hoursOfDay[i].time,
+            taskInput: taskEl.textContent
         }
         tasks.push(taskDataObj)
     }
@@ -163,36 +167,34 @@ function checkStatus() {
     }
 };
 
-function createNewTask(event) {
+var taskList = [];
 
-    //create text area for TASK events
-    var taskEl = document.createElement("form")
-    taskEl.setAttribute("type", "text")
-    taskEl.className = "description"
-    taskEl.id = newTaskId
-    taskEl.textContent = ""
-    taskElDisplay.appendChild(taskEl);
-    var newTaskId = event.target.getAttribute("id");
-
-    var newTask = document.querySelector("#"+ newTaskId)
-    var taskInput = $(this).val(newTask);
-    newTask.textContent = taskInput
-    taskElDisplay.appendChild(newTask);
-
-    console.log(newTaskId);
-    console.log(newTask);
-    console.log(taskInput)
-
-}
-function editTask(event) {
-}
-
-function saveTask (event) {
+function saveTask(event, taskDataObj) {
+    $(".saveBtn").on("click", console.log("working!"));
     
+    if (event.target.id === "save8") {
+        var taskInput = document.querySelector("#task-item-8").value
+        taskList.push(taskInput);
+        localStorage.setItem("task", taskInput)
+
+        console.log(taskInput)
+        console.log(taskList);
+    }
+    if (event.target.id === "save9") {
+        var taskInput = document.querySelector("#task-item-9").value
+        taskList.push(taskInput);
+        localStorage.setItem("task", taskInput)
+        
+        console.log(taskInput)
+        console.log(taskList);
+    }
+   
+    console.log(event.target.id)
 }
 
 function loadTasks () {
-
+    localStorage.getItem("task")
+    console.log(localStorage.getItem("task"));
 }
 // WHEN I click into a time block
 // THEN I can enter an event
@@ -200,10 +202,6 @@ function loadTasks () {
 // THEN the text for that event is saved in local storage
 // WHEN I refresh the page
 // THEN the saved events persist
-
-
-
-
 
 displayDate();
 
